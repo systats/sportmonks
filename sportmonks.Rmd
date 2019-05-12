@@ -1,0 +1,92 @@
+---
+title: "sportmonks"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+pacman::p_load(tidyverse, devtools, httr, jsonlite, xml2, listviewer, janitor)
+```
+
+
+```{r}
+key <- read_json("settings.json") %>% unlist
+```
+
+
+```{r}
+make_request <- function(end_point, dev = T){
+  base_url <- "https://soccer.sportmonks.com/api/v2.0/"
+  q <- glue::glue("{base_url}{end_point}?api_token={key}")
+  res <- httr::GET(q)
+  if(dev) print(q); print(res)
+  return(httr::content(res))
+}
+
+end_point <- "livescores/now"
+#make_request(end_point)
+```
+
+
+
+```{r}
+get_continents <- function(id = NULL){
+  end_point <- "continents"
+  if(!is.null(id)) end_point <- paste0(end_point, "/", id)
+  make_request(end_point)$data %>% 
+  purrr::map_dfr(dplyr::bind_cols) %>% 
+  janitor::clean_names(.)
+}
+
+get_countries <- function(id = NULL){
+  end_point <- "countries"
+  if(!is.null(id)) end_point <- paste0(end_point, "/", id)
+  make_request(end_point)$data %>%
+  purrr::map_dfr(~rlist::list.flatten(.x) %>% bind_cols) %>% 
+  janitor::clean_names(.)
+}
+
+get_leagues <- function(id = NULL){
+  end_point <- "leagues"
+  if(!is.null(id)) end_point <- paste0(end_point, "/", id)
+  make_request(end_point)$data %>%
+  purrr::map_dfr(~rlist::list.flatten(.x) %>% bind_cols) %>% 
+  janitor::clean_names(.)
+}
+
+get_seasons <- function(id = NULL){
+  end_point <- "seasons"
+  if(!is.null(id)) end_point <- paste0(end_point, "/", id)
+  make_request(end_point)$data %>%
+  purrr::map_dfr(~rlist::list.flatten(.x) %>% bind_cols) %>% 
+  janitor::clean_names(.)
+}
+
+get_fixtures <- function(id = NULL){
+  end_point <- "fixtures"
+  if(!is.null(id)) end_point <- paste0(end_point, "/", id)
+  make_request(end_point)$data
+}
+```
+
+```{r}
+list(
+  get_continents,
+  get_countries,
+  get_leagues,
+  get_seasons
+) %>% 
+  walk(~glimpse(.x()))
+```
+
+
+```{r, eval = F}
+nn <- get_leagues(1) 
+nn %>% listviewer::jsonedit()
+nn[[1]] %>% rlist::list.flatten()
+```
+
