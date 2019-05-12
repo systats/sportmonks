@@ -74,7 +74,7 @@ list(
 
     ## https://soccer.sportmonks.com/api/v2.0/continents?api_token=2eT3zMYQNQeAD0ELjWXMKi0HWzefdHRUf0Iki2mozdvfgP0hFoAXuGfiB9xk
     ## Response [https://soccer.sportmonks.com/api/v2.0/continents?api_token=2eT3zMYQNQeAD0ELjWXMKi0HWzefdHRUf0Iki2mozdvfgP0hFoAXuGfiB9xk]
-    ##   Date: 2019-05-12 17:19
+    ##   Date: 2019-05-12 17:22
     ##   Status: 200
     ##   Content-Type: application/json
     ##   Size: 508 B
@@ -85,7 +85,7 @@ list(
     ## $ name <chr> "Europe", "Asia", "Africa", "Oceania", "Antarctica", "North…
     ## https://soccer.sportmonks.com/api/v2.0/countries?api_token=2eT3zMYQNQeAD0ELjWXMKi0HWzefdHRUf0Iki2mozdvfgP0hFoAXuGfiB9xk
     ## Response [https://soccer.sportmonks.com/api/v2.0/countries?api_token=2eT3zMYQNQeAD0ELjWXMKi0HWzefdHRUf0Iki2mozdvfgP0hFoAXuGfiB9xk]
-    ##   Date: 2019-05-12 17:19
+    ##   Date: 2019-05-12 17:22
     ##   Status: 200
     ##   Content-Type: application/json
     ##   Size: 950 kB
@@ -105,7 +105,7 @@ list(
     ## $ extra_flag         <chr> "<svg xmlns=\"http://www.w3.org/2000/svg\" wi…
     ## https://soccer.sportmonks.com/api/v2.0/leagues?api_token=2eT3zMYQNQeAD0ELjWXMKi0HWzefdHRUf0Iki2mozdvfgP0hFoAXuGfiB9xk
     ## Response [https://soccer.sportmonks.com/api/v2.0/leagues?api_token=2eT3zMYQNQeAD0ELjWXMKi0HWzefdHRUf0Iki2mozdvfgP0hFoAXuGfiB9xk]
-    ##   Date: 2019-05-12 17:19
+    ##   Date: 2019-05-12 17:22
     ##   Status: 200
     ##   Content-Type: application/json
     ##   Size: 1.08 kB
@@ -126,7 +126,7 @@ list(
     ## $ coverage_topscorer_cards   <lgl> TRUE, TRUE
     ## https://soccer.sportmonks.com/api/v2.0/seasons?api_token=2eT3zMYQNQeAD0ELjWXMKi0HWzefdHRUf0Iki2mozdvfgP0hFoAXuGfiB9xk
     ## Response [https://soccer.sportmonks.com/api/v2.0/seasons?api_token=2eT3zMYQNQeAD0ELjWXMKi0HWzefdHRUf0Iki2mozdvfgP0hFoAXuGfiB9xk]
-    ##   Date: 2019-05-12 17:19
+    ##   Date: 2019-05-12 17:22
     ##   Status: 200
     ##   Content-Type: application/json
     ##   Size: 3.83 kB
