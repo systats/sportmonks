@@ -4,89 +4,204 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = T, message = F, error = F, warning = F)
+```
+
+```{r, echo = FALSE, results='asis', eval = T}
+library(badger)
+git_repo <- "systats/sportmonks"
+cat(
+  badge_custom("Premium Data", "Soccer", "magenta"),
+  #badge_travis(git_repo),
+  #"[![Codecov test coverage](https://codecov.io/gh/favstats/peRspective/branch/master/graph/badge.svg)](https://codecov.io/gh/favstats/peRspective?branch=master)",
+	badge_code_size(git_repo),
+	badge_last_commit(git_repo)
+)
+```
+
+# Packages
+
+```{r}
+pacman::p_load(tidyverse, usethis, devtools, httr, jsonlite, xml2, listviewer, janitor)
+devtools::load_all()
+# devtools::document()
+# devtools::test()
 ```
 
 
 ```{r}
-pacman::p_load(tidyverse, devtools, httr, jsonlite, xml2, listviewer, janitor)
+key <- read_json("tests/settings.json")[[1]]
+Sys.setenv(sportmonks = key)
+Sys.getenv("sportmonks")
+```
+
+
+# Endpoints
+
+## Continents
+
+```{r}
+get_continents()
+get_continent(1)
+```
+
+## Country
+
+```{r}
+get_countries()
+get_country(2)
+```
+
+## Leagues
+
+```{r}
+get_leagues()
+get_league(271)
+```
+
+
+## Seasons
+
+```{r}
+get_seasons()
+get_season(1273)
+```
+
+
+## Fixtures
+
+```{r}
+get_fixture(id = 10333321)
+get_fixtures(ids = c(10333321, 10333322))
+get_fixture(date = "2019-01-23")
+get_fixtures(dates = c("2019-01-01", "2019-02-01"))
+# missing: get by date range for team
+```
+
+## Livescores
+
+```{r}
+get_live()
+#get_live_now()
+# all 
+# inplay
+```
+
+
+## Comments
+
+```{r}
+get_comments(10333321)
+```
+
+
+## Highlights
+
+```{r}
+get_highlights(10333321)
+```
+
+## Head2Head
+
+```{r}
+get_head2head(team1 = 309, team2 = 66)
+```
+
+
+## Teams
+
+```{r}
+get_team(180)
+# by id 
+# by season
+```
+
+## Players
+
+```{r}
+get_player(180)
+```
+
+## Topscores
+
+```{r}
+get_topscores(season_id = 1273, agg = T)
+```
+
+## Venues
+
+```{r}
+get_venue(8928)
+# by id
+# by season id
+```
+
+## Rounds
+
+```{r}
+get_round(round_id = 147767)
+get_round(season_id = 12963)
+```
+
+
+## Odds
+
+```{r}
+get_odds(10333321)
+
+# by fixture and bookmarker
+# by fixture and market
+# by fixture id
+# inplay odds by fixture id
+```
+
+
+## Coaches
+
+```{r}
+get_coache(896462)
+```
+
+
+## Stages
+
+```{r}
+get_stage(stage_id = 7508262)
+get_stage(season_id = 12963)
+# by season id
+```
+
+## Bookmarkers
+
+```{r}
+get_bookmakers()
+get_bookmaker(book_id = 25679219)
+# not working?
+```
+
+
+## Markets
+
+```{r}
+get_markets()
+get_market(id = 10)
+# not working?
+```
+
+## Team Squads
+
+```{r}
+get_team_squads(season_id = 12963, team_id = 180)
+```
+
+## TV-stations
+
+```{r}
+get_tv(10333321)
 ```
 
 
 ```{r}
-key <- read_json("settings.json") %>% unlist
-```
-
-
-```{r}
-make_request <- function(end_point, dev = T){
-  base_url <- "https://soccer.sportmonks.com/api/v2.0/"
-  q <- glue::glue("{base_url}{end_point}?api_token={key}")
-  res <- httr::GET(q)
-  if(dev) print(q); print(res)
-  return(httr::content(res))
-}
-
-end_point <- "livescores/now"
-#make_request(end_point)
-```
-
-
-
-```{r}
-get_continents <- function(id = NULL){
-  end_point <- "continents"
-  if(!is.null(id)) end_point <- paste0(end_point, "/", id)
-  make_request(end_point)$data %>% 
-  purrr::map_dfr(dplyr::bind_cols) %>% 
-  janitor::clean_names(.)
-}
-
-get_countries <- function(id = NULL){
-  end_point <- "countries"
-  if(!is.null(id)) end_point <- paste0(end_point, "/", id)
-  make_request(end_point)$data %>%
-  purrr::map_dfr(~rlist::list.flatten(.x) %>% bind_cols) %>% 
-  janitor::clean_names(.)
-}
-
-get_leagues <- function(id = NULL){
-  end_point <- "leagues"
-  if(!is.null(id)) end_point <- paste0(end_point, "/", id)
-  make_request(end_point)$data %>%
-  purrr::map_dfr(~rlist::list.flatten(.x) %>% bind_cols) %>% 
-  janitor::clean_names(.)
-}
-
-get_seasons <- function(id = NULL){
-  end_point <- "seasons"
-  if(!is.null(id)) end_point <- paste0(end_point, "/", id)
-  make_request(end_point)$data %>%
-  purrr::map_dfr(~rlist::list.flatten(.x) %>% bind_cols) %>% 
-  janitor::clean_names(.)
-}
-
-get_fixtures <- function(id = NULL){
-  end_point <- "fixtures"
-  if(!is.null(id)) end_point <- paste0(end_point, "/", id)
-  make_request(end_point)$data
-}
-```
-
-```{r}
-list(
-  get_continents,
-  get_countries,
-  get_leagues,
-  get_seasons
-) %>% 
-  walk(~glimpse(.x()))
-```
-
-
-```{r, eval = F}
-nn <- get_leagues(1) 
-nn %>% listviewer::jsonedit()
-nn[[1]] %>% rlist::list.flatten()
+sessionInfo()
 ```
 
