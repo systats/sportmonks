@@ -20,15 +20,22 @@ cat(
 )
 ```
 
-# Packages
+Install via
 
-```{r}
+```{r, eval = F}
+devtools::install_github("systats/sportmonks")
+library(sportmonks)
+```
+
+
+```{r, echo = F}
 pacman::p_load(tidyverse, usethis, devtools, httr, jsonlite, xml2, listviewer, janitor)
 devtools::load_all()
 # devtools::document()
 # devtools::test()
 ```
 
+Set key
 
 ```{r}
 key <- read_json("tests/settings.json")[[1]]

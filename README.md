@@ -6,14 +6,14 @@ sportmonks
 [![](https://img.shields.io/github/languages/code-size/systats/sportmonks.svg)](https://github.com/systats/sportmonks)
 [![](https://img.shields.io/github/last-commit/systats/sportmonks.svg)](https://github.com/systats/sportmonks/commits/master)
 
-# Packages
+Install via
 
 ``` r
-pacman::p_load(tidyverse, usethis, devtools, httr, jsonlite, xml2, listviewer, janitor)
-devtools::load_all()
-# devtools::document()
-# devtools::test()
+devtools::install_github("systats/sportmonks")
+library(sportmonks)
 ```
+
+Set key
 
 ``` r
 key <- read_json("tests/settings.json")[[1]]
