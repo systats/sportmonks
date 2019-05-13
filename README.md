@@ -18,10 +18,8 @@ devtools::load_all()
 ``` r
 key <- read_json("tests/settings.json")[[1]]
 Sys.setenv(sportmonks = key)
-Sys.getenv("sportmonks")
+#Sys.getenv("sportmonks")
 ```
-
-    ## [1] "2eT3zMYQNQeAD0ELjWXMKi0HWzefdHRUf0Iki2mozdvfgP0hFoAXuGfiB9xk"
 
 # Endpoints
 

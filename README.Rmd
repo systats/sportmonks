@@ -33,7 +33,7 @@ devtools::load_all()
 ```{r}
 key <- read_json("tests/settings.json")[[1]]
 Sys.setenv(sportmonks = key)
-Sys.getenv("sportmonks")
+#Sys.getenv("sportmonks")
 ```
 
 
