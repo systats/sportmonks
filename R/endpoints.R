@@ -69,7 +69,8 @@ get_head2head <- function(team1, team2){
 }
 
 #' @export 
-get_team <- function(id){
+get_team <- function(id, season_id = NULL){
+  if(!is.null(season_id)) id <- paste0("season/", season_id)
   glue::glue("teams/{id}") %>% request()
 }
 

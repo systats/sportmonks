@@ -11,7 +11,8 @@ knitr::opts_chunk$set(echo = T, message = F, error = F, warning = F)
 library(badger)
 git_repo <- "systats/sportmonks"
 cat(
-  badge_custom("Premium Data", "Soccer", "magenta"),
+  badge_custom("Premium", "Soccer Data", "yellow"),
+  badge_devel(git_repo, "blue"),
   #badge_travis(git_repo),
   #"[![Codecov test coverage](https://codecov.io/gh/favstats/peRspective/branch/master/graph/badge.svg)](https://codecov.io/gh/favstats/peRspective?branch=master)",
 	badge_code_size(git_repo),
@@ -82,7 +83,7 @@ get_fixtures(dates = c("2019-01-01", "2019-02-01"))
 
 ```{r}
 get_live()
-#get_live_now()
+# get_live_now()
 # all 
 # inplay
 ```
@@ -112,8 +113,7 @@ get_head2head(team1 = 309, team2 = 66)
 
 ```{r}
 get_team(180)
-# by id 
-# by season
+get_team(season_id = 1273)
 ```
 
 ## Players
@@ -168,7 +168,6 @@ get_coache(896462)
 ```{r}
 get_stage(stage_id = 7508262)
 get_stage(season_id = 12963)
-# by season id
 ```
 
 ## Bookmarkers
@@ -176,7 +175,6 @@ get_stage(season_id = 12963)
 ```{r}
 get_bookmakers()
 get_bookmaker(book_id = 25679219)
-# not working?
 ```
 
 
@@ -185,7 +183,6 @@ get_bookmaker(book_id = 25679219)
 ```{r}
 get_markets()
 get_market(id = 10)
-# not working?
 ```
 
 ## Team Squads

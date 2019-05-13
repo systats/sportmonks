@@ -88,10 +88,16 @@ test_that("get_head2head", {
   expect_equal(colnames(out)[1:3], c("id", "league_id", "season_id"))
 })
 
-test_that("get_team", {
+test_that("get_team by id", {
   input <- 180
   out <- get_team(input)
   expect_equal(out$id, input)
+})
+
+test_that("get_team by season", {
+  input <- 1273
+  out <- get_team(season_id = input)
+  expect_equal(out$id[1], 85)
 })
 
 test_that("get_player", {

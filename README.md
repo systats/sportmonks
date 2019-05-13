@@ -1,13 +1,8 @@
 sportmonks
 ================
 
-    ## Registered S3 methods overwritten by 'ggplot2':
-    ##   method         from 
-    ##   [.quosures     rlang
-    ##   c.quosures     rlang
-    ##   print.quosures rlang
-
-![](https://img.shields.io/badge/Premium%20Data-Soccer-magenta.svg)
+![](https://img.shields.io/badge/Premium-Soccer%20Data-yellow.svg)
+[![](https://img.shields.io/badge/devel%20version-0.0.0.9000-blue.svg)](https://github.com/systats/sportmonks)
 [![](https://img.shields.io/github/languages/code-size/systats/sportmonks.svg)](https://github.com/systats/sportmonks)
 [![](https://img.shields.io/github/last-commit/systats/sportmonks.svg)](https://github.com/systats/sportmonks/commits/master)
 
@@ -16,26 +11,6 @@ sportmonks
 ``` r
 pacman::p_load(tidyverse, usethis, devtools, httr, jsonlite, xml2, listviewer, janitor)
 devtools::load_all()
-```
-
-    ## Loading sportmonks
-
-    ## 
-    ## Attaching package: 'testthat'
-
-    ## The following objects are masked from 'package:devtools':
-    ## 
-    ##     setup, test_file
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     matches
-
-    ## The following object is masked from 'package:purrr':
-    ## 
-    ##     is_null
-
-``` r
 # devtools::document()
 # devtools::test()
 ```
@@ -337,7 +312,7 @@ get_live()
     ## #   group_id <int>
 
 ``` r
-#get_live_now()
+# get_live_now()
 # all 
 # inplay
 ```
@@ -444,9 +419,26 @@ get_team(180)
     ## #   current_season_id <int>
 
 ``` r
-# by id 
-# by season
+get_team(season_id = 1273)
 ```
+
+    ## # A tibble: 12 x 10
+    ##       id legacy_id name  short_code country_id national_team founded
+    ##    <int>     <int> <chr> <chr>           <int> <lgl>           <int>
+    ##  1    85       146 Købe… COP               320 FALSE            1992
+    ##  2    86       522 Silk… SIL               320 FALSE            1917
+    ##  3   211       631 Hors… ACH               320 FALSE            1994
+    ##  4   293        NA Brøn… SLO               320 FALSE            1964
+    ##  5   390        NA Sønd… SON               320 FALSE            2004
+    ##  6   939       513 Midt… FCM               320 FALSE            1999
+    ##  7  1020       173 AaB   AAB               320 FALSE            1885
+    ##  8  1371       518 Esbj… <NA>              320 FALSE            1924
+    ##  9  1789       520 OB    ODE               320 FALSE            1889
+    ## 10  2394        NA Nord… FCN               320 FALSE            2003
+    ## 11  2447       628 Vibo… <NA>              320 FALSE            1896
+    ## 12  2905       629 AGF   AGF               320 FALSE            1902
+    ## # … with 3 more variables: logo_path <chr>, venue_id <int>,
+    ## #   current_season_id <int>
 
 ## Players
 
@@ -593,10 +585,6 @@ get_stage(season_id = 12963)
     ## 1 7508261 2nd Phase Group Stage       501     12963
     ## 2 7508262 1st Phase Group Stage       501     12963
 
-``` r
-# by season id
-```
-
 ## Bookmarkers
 
 ``` r
@@ -627,10 +615,6 @@ get_bookmaker(book_id = 25679219)
     ##      <int> <chr>   
     ## 1 25679219 Marathon
 
-``` r
-# not working?
-```
-
 ## Markets
 
 ``` r
@@ -660,10 +644,6 @@ get_market(id = 10)
     ##      id name     
     ##   <int> <chr>    
     ## 1    10 Home/Away
-
-``` r
-# not working?
-```
 
 ## Team Squads
 
