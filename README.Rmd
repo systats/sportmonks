@@ -29,15 +29,11 @@ library(sportmonks)
 
 
 ```{r, echo = F}
-pacman::p_load(tidyverse, usethis, devtools, httr, jsonlite, xml2, listviewer, janitor)
+pacman::p_load(tidyverse, usethis, devtools, httr, jsonlite, xml2, listviewer, janitor, crayon)
 devtools::load_all()
 # devtools::document()
 # devtools::test()
-```
 
-Set key
-
-```{r}
 key <- read_json("tests/settings.json")[[1]]
 Sys.setenv(sportmonks = key)
 #Sys.getenv("sportmonks")
@@ -63,7 +59,9 @@ get_country(2)
 ## Leagues
 
 ```{r}
-get_leagues()
+devtools::document()
+my_leagues <- get_leagues()  %>% 
+  parse_request()
 get_league(271)
 ```
 
@@ -71,15 +69,24 @@ get_league(271)
 ## Seasons
 
 ```{r}
-get_seasons()
+new_leagues <- get_seasons() %>% 
+  parse_request()
 get_season(1273)
 ```
 
 
 ## Fixtures
 
+Depending on your substription plan and the situational needs you can include nested 
+tables which is particuarly useful for the fixture Endpoint to get all the data at once. 
+
 ```{r}
-get_fixture(id = 10333321)
+includes <- c('localTeam','visitorTeam','goals',
+              'cards','lineup','referee','venue',
+              'odds', 'stats')
+
+ 
+get_fixture(id = 10333321, includes = includes)
 get_fixtures(ids = c(10333321, 10333322))
 get_fixture(date = "2019-01-23")
 get_fixtures(dates = c("2019-01-01", "2019-02-01"))
@@ -208,4 +215,23 @@ get_tv(10333321)
 ```{r}
 sessionInfo()
 ```
+
+
+
+# Status Response
+
+* 2xx range indicate success.
+  - 200	The request was successful and data is returned.
+* 4xx range indicate an error that failed given the information provided.
+    - 400	It seems that some part of the request is malformed. The exact reason is returned in the response.
+    - 401	The request is not authenticated.
+    - 403	Not authorized. Indicates you're attempting to access a feed which is not accesible from your plan.
+    - 429	Too Many Requests. In order to make the API as responsive as possible, you have an hourly request limit. The limit for your current subscription can be found in any successfull response. Check the "meta" section to find out your limit.
+* 5xx range indicate an error with SportMonks' servers.
+  - 500	An internal error has occurred, and has been logged for further inspection. Please email support if you are receiving this error.
+
+
+## Ratelimits
+
+* `default` all our plans are included with 2000 requests per 60 minutes per endpoint.
 
