@@ -9,7 +9,7 @@ make_request <- function(end_point, page = NULL, leagues = NULL, includes = NULL
   
   res <- httr::GET(q)
   
-  if(http_error(res)){
+  if(httr::http_error(res)){
     main <- httr::message_for_status(res$status_code)
     log_error(header = res$status_code, info = main)
   } else {

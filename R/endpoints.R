@@ -40,9 +40,20 @@ get_fixture <- function(id = NULL, date = NULL, ...){
 #' @export 
 get_fixtures <- function(ids = NULL, dates = NULL, year = NULL, ...){
   
+  if(!is.null(ids) & length(ids) > 25){
+    out <- split(ids, 1:length(ids) %/%25) %>% 
+      purrr::map(~{
+        get_fixtures(id = .x, ...) %>%
+          reduce(c)
+      })
+    
+    return(out)
+  }
+  
   if(!is.null(ids)) ep <- ids %>% paste(collapse = ",") %>% paste("fixtures/multi/", .) 
   if(!is.null(dates)) ep <- dates[1:2] %>% paste(collapse = "/") %>% paste0("fixtures/between/", .) 
   if(!is.null(year)) ep <- glue::glue("fixtures/between/{year}-01-01/{year+1}-01-01")
+  
   ep %>% request(...)
 }
 
@@ -138,4 +149,15 @@ get_team_squads <- function(season_id = NULL, team_id = NULL, ...){
 #' @export 
 get_tv <- function(game_id, ...){
   glue::glue("tvstations/fixture/{game_id}") %>% request(...)
+}
+
+
+#' @export 
+get_fixture_year <- function(year){
+  out <- get_fixtures(year = year) %>% 
+    purrr::map_dfr(~{
+      tibble::tibble(game_id = .x[["id"]], date = .x[["time"]][["starting_at"]][["date"]])
+    })
+  
+  return(out)
 }
