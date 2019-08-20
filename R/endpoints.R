@@ -42,8 +42,13 @@ get_fixtures <- function(ids = NULL, dates = NULL, year = NULL, parse = T,...){
   
   if(!is.null(ids) & length(ids) > 24){
     out <- split(ids, 1:length(ids) %/% 25) %>% 
-      purrr::imap_dfr(~{get_fixtures(ids = .x, dates = NULL, year = NULL, parse = T, ...)}) #%>%
-      #purrr::reduce(c)
+      purrr::imap(~{get_fixtures(ids = .x, dates = NULL, year = NULL, parse = parse, ...)}) #%>%
+    
+    if(parse){
+      out <- out %>% reduce(bind_rows)
+    } else {
+      out <- out %>% reduce(c)
+    }
   }
   
   
