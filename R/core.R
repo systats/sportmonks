@@ -42,8 +42,7 @@ request <- function(end_point, dev = F, pages = T, ...){
     if(pages & meta$pagination$total_pages > 1){
       
       data <- 2:meta$pagination$total_pages %>%
-        imap(~{
-          print(.x)
+        purrr::imap(~{
           end_point %>% 
             make_request(page = .x, leagues = param[["leagues"]], includes = param[["includes"]]) %>%
             httr::content(.) %>%
@@ -59,14 +58,18 @@ request <- function(end_point, dev = F, pages = T, ...){
 }
 
 #' @export 
-parse_request <- function(d){
+parse_request <- function(d, parse = T){
+  if(!parse){return(d)}
   if(length(d[[1]]) == 1){
     d %>% 
       rlist::list.flatten() %>% 
-      dplyr::bind_cols() 
+      dplyr::bind_cols() %>%
+      janitor::clean_names(.)
   } else {
     d %>% 
-      purrr::map_dfr(rlist::list.flatten)
+      purrr::map(rlist::list.flatten) %>%
+      purrr::map_dfr(~{.x %>% purrr::map(as.character)}) %>%
+      janitor::clean_names(.)
   }
 }
 
