@@ -172,3 +172,25 @@ get_fixture_year <- function(year){
   
   return(out)
 }
+
+
+#' @export 
+get_future_games <- function(league_id = NULL){
+  year <- lubridate::year(lubridate::today())
+  
+  future_games <- bind_rows(
+    get_fixture_year(year),
+    get_fixture_year(year + 1)
+  ) %>%
+    filter(lubridate::ymd(date) > lubridate::today())
+  
+  filter_condition <- ifelse(is.null(league_id), 
+                             function(.x){return(.x)}, 
+                             function(.x){filter(.x, league_id %in% !!league_id)})
+  
+  future_games <- get_fixtures(future_games$game_id) %>%
+    select(id, league_id, season_id, localteam_id, visitorteam_id) %>%
+    filter_condition
+  
+  return(future_games)
+}

@@ -31,56 +31,39 @@ parse_core <- function(response){
 }
 
 #' @export 
-parse_odds <- function(data){
+parse_odds <- function(response){
   
-  if(is.null(data)) return(dplyr::tibble(id = NA_character_))
+  if(length(response$odds$data) == 0){return(tibble(game_id = response$id[[1]]))}
   
-  odds_out <- data$odds$data %>%
-    purrr::map_dfr(~{
-      id <- .x[["id"]] # %>% map_chr("id")
-      name <- .x[["name"]] # %>% map_chr("name")
-      if(name != "3Way Result") retrun(NULL)
-      
-      odds <- .x[["bookmaker"]][["data"]] %>%
-        map_dfr(~{
-          odds <- .x[["odds"]][["data"]] %>%
-            purrr::map_dfr(~{
-              .x %>% 
-                rlist::list.flatten() %>% 
-                purrr::compact() %>% 
-                dplyr::bind_cols()
-            }) %>%
-            janitor::clean_names() %>%
-            dplyr::rename(odd_label = label, odd_value = value) %>%
-            dplyr::select(-dplyr::contains("timezone"))
-          
-          odds[["book_id"]] <- .x[["id"]]
-          odds[["book_name"]] <- .x[["name"]]
-          
-          return(odds)
-        })
-      
-      id <- ifelse(is.null(id), NA_character_, id)
-      name <- ifelse(is.null(name), NA_character_, name)
-      
-      out <- odds %>% 
-        dplyr::mutate(
-          game_id = data$id, 
-          market_id = id, 
-          market_name = name,
-          index = as.character(glue::glue("{game_id}_{book_id}_{market_id}_{odd_label}"))
-        ) %>% 
-        dplyr::select(index, game_id, market_id, market_name, dplyr::everything())
-      
-      return(out)
-    })
+  out <- response$odds %>% 
+    as_tibble %>%
+    tidyr::unnest_wider(data) %>%
+    tidyr::unnest_longer(id) %>%
+    rename(meta_id = id) %>%
+    tidyr::unnest_longer(name) %>%
+    rename(meta_name = name) %>%
+    mutate(meta_name = clean_value(meta_name)) %>%
+    tidyr::unnest_longer(suspended) %>%
+    tidyr::unnest_wider(bookmaker) %>%
+    tidyr::unnest_longer(data) %>%
+    tidyr::unnest_wider(data) %>%
+    tidyr::unnest_longer(id) %>%
+    tidyr::unnest_longer(name) %>%
+    tidyr::unnest_wider(odds) %>%
+    tidyr::unnest_longer(data) %>%
+    tidyr::unnest_wider(data) %>% 
+    mutate_if(~is.list(.x) & length(.x[[1]]) == 1, ~as.character(unlist(.x))) %>%
+    tidyr::unnest_wider(last_update) %>%
+    mutate_if(~is.list(.x) & length(.x[[1]]) == 1, ~as.character(unlist(.x))) %>%
+    mutate(game_id = response$id[[1]])
   
-  return(odds_out)
+  return(out)
 }
-
 
 #' @export 
 parse_lineups <- function(data){
+  if(length(data$lineup$data) == 0){return(tibble(game_id = data$id))}
+  
   data$lineup[[1]] %>% 
     purrr::map_dfr(~{.x %>% rlist::list.flatten() %>% purrr::compact() %>% dplyr::bind_cols()}) %>% 
     janitor::clean_names(.) %>%
@@ -94,6 +77,8 @@ parse_lineups <- function(data){
 
 #' @export
 parse_teamstats <- function(data){
+  if(length(data$stats$data) == 0){return(tibble(game_id = data$id))}
+  
   data$stats[[1]] %>% 
     purrr::map_dfr(~rlist::list.flatten(.x) %>% dplyr::bind_cols()) %>% 
     janitor::clean_names() %>%
