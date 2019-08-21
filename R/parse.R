@@ -67,7 +67,7 @@ parse_lineups <- function(data){
   data$lineup[[1]] %>% 
     purrr::map_dfr(~{.x %>% rlist::list.flatten() %>% purrr::compact() %>% dplyr::bind_cols()}) %>% 
     janitor::clean_names(.) %>%
-    dplyr::rename_all(~str_remove_all(.x, "stats_") %>% str_replace_all("shots_shots_", "shots_")) %>%
+    dplyr::rename_all(~stringr::str_remove_all(.x, "stats_") %>% str_replace_all("shots_shots_", "shots_")) %>%
     dplyr::rename(game_id = fixture_id) %>% 
     dplyr::mutate(index = as.character(glue::glue("{game_id}_{team_id}_{player_id}"))) %>%
     dplyr::select(index, game_id, team_id, player_id, player_name, dplyr::everything()) %>%
