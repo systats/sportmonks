@@ -36,13 +36,13 @@ parse_odds <- function(response){
   if(length(response$odds$data) == 0){return(tibble(game_id = response$id[[1]]))}
   
   out <- response$odds %>% 
-    tibble::as_tibble %>%
+    tibble::as_tibble(.) %>%
     tidyr::unnest_wider(data) %>%
     tidyr::unnest_longer(id) %>%
-    rename(meta_id = id) %>%
+    dplyr::rename(meta_id = id) %>%
     tidyr::unnest_longer(name) %>%
-    rename(meta_name = name) %>%
-    mutate(meta_name = clean_value(meta_name)) %>%
+    dplyr::rename(meta_name = name) %>%
+    dplyr::mutate(meta_name = clean_value(meta_name)) %>%
     tidyr::unnest_longer(suspended) %>%
     tidyr::unnest_wider(bookmaker) %>%
     tidyr::unnest_longer(data) %>%
@@ -52,10 +52,10 @@ parse_odds <- function(response){
     tidyr::unnest_wider(odds) %>%
     tidyr::unnest_longer(data) %>%
     tidyr::unnest_wider(data) %>% 
-    mutate_if(~is.list(.x) & length(.x[[1]]) == 1, ~as.character(unlist(.x))) %>%
+    dplyr::mutate_if(~is.list(.x) & length(.x[[1]]) == 1, ~as.character(unlist(.x))) %>%
     tidyr::unnest_wider(last_update) %>%
-    mutate_if(~is.list(.x) & length(.x[[1]]) == 1, ~as.character(unlist(.x))) %>%
-    mutate(game_id = response$id[[1]])
+    dplyr::mutate_if(~is.list(.x) & length(.x[[1]]) == 1, ~as.character(unlist(.x))) %>%
+    dplyr::mutate(game_id = response$id[[1]])
   
   return(out)
 }
