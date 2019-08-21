@@ -36,7 +36,7 @@ parse_odds <- function(response){
   if(length(response$odds$data) == 0){return(tibble(game_id = response$id[[1]]))}
   
   out <- response$odds %>% 
-    as_tibble %>%
+    tibble::as_tibble %>%
     tidyr::unnest_wider(data) %>%
     tidyr::unnest_longer(id) %>%
     rename(meta_id = id) %>%
@@ -77,7 +77,7 @@ parse_lineups <- function(data){
 
 #' @export
 parse_teamstats <- function(data){
-  if(length(data$stats$data) == 0){return(tibble(game_id = data$id))}
+  if(length(data$stats$data) == 0){return(tibble::tibble(game_id = data$id))}
   
   data$stats[[1]] %>% 
     purrr::map_dfr(~rlist::list.flatten(.x) %>% dplyr::bind_cols()) %>% 
