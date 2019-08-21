@@ -9,7 +9,7 @@ characterize_pos <- function(x){
 clean_value <- function(x){
   x %>%
     tolower() %>%
-    stringr::tr_remove_all("[[:punct:]]") %>%
+    stringr::str_remove_all("[[:punct:]]") %>%
     stringr::str_replace_all("\\s+", "\\_") %>%
     stringr::str_replace("^(?=\\d)", "x")
 }
