@@ -1,5 +1,5 @@
 #' @export 
-make_request <- function(end_point, page = NULL, leagues = NULL, includes = NULL){
+make_request <- function(end_point, page = NULL, leagues = NULL, includes = NULLj, http_code = F){
   
   base_url <- "https://soccer.sportmonks.com/api/v2.0/"
   page <- ifelse(is.null(page), "", glue::glue("&page={page}"))
@@ -8,6 +8,8 @@ make_request <- function(end_point, page = NULL, leagues = NULL, includes = NULL
   q <- glue::glue("{base_url}{end_point}?api_token={Sys.getenv('sportmonks')}{includes}{page}{leagues}") #&include={includes}
   
   res <- httr::GET(q)
+  
+  if(http_code) return(res$status_code)
   
   if(httr::http_error(res)){
     main <- httr::message_for_status(res$status_code)
@@ -23,11 +25,12 @@ make_request <- function(end_point, page = NULL, leagues = NULL, includes = NULL
 
 
 #' @export  
-request <- function(end_point, dev = F, pages = T, ...){
+request <- function(end_point, dev = F, pages = T, http_code = F, ...){
   
   param <- list(...)
   
-  res <- make_request(end_point, leagues = param[["leagues"]], includes = param[["includes"]])
+  res <- make_request(end_point, leagues = param[["leagues"]], includes = param[["includes"]], http_code = http_code)
+  if(http_code) return(res)
   ct <- httr::content(res)
   data <- ct$data
   meta <- ct$meta
